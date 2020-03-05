@@ -9,6 +9,19 @@
                 list-style: none;
                 padding: 0;
                 margin: 0;
+                width: 200px;
+            }
+            li {
+                clear: both;
+            }
+            li button {
+                -webkit-appearance: none;
+                border: none;
+                outline: none;
+                color: red;
+                float: right;
+                cursor: pointer;
+                font-size: 20px;
             }
         </style>
     </head>
@@ -20,10 +33,32 @@
         </form>
         <ul id="todos">
             {% for d in data %}
-            <li><input class="check-completed" data-id="{{ d.id }}" type="checkbox" {%if d.completed %} checked {% endif %} >{{ d.description }}</li>
+            <li>
+                <input class="check-completed" data-id="{{ d.id }}" type="checkbox" 
+                    {%if d.completed %} checked {% endif %} />
+                    {{ d.description }}
+                <button class="delete-todo" data-id="{{ d.id }}">&cross;</button>
+            </li>
             {% endfor %}
         </ul>
         <script>
+            const crossbuttons = document.querySelectorAll('.delete-todo');
+            for (i = 0; i < crossbuttons.length; i++) {
+                const crossbutton = crossbuttons[i];
+                crossbutton.onclick = function(e) {
+                    console.log('event', e);
+                    const todoid = e.target.dataset["id"];
+                    fetch('/todos/' + todoid, {
+                        method: 'DELETE'
+                    })
+                    .then(function() {
+                        document.getElementById('error').className = 'hidden';
+                    })
+                    .catch(function() {
+                        document.getElementById('error').className = '';
+                    })
+                }
+            }
             const checkboxes = document.querySelectorAll('.check-completed');
             for (i = 0; i < checkboxes.length; i++) {
                 const checkbox = checkboxes[i];
