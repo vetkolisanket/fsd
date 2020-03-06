@@ -48,6 +48,7 @@
                 crossbutton.onclick = function(e) {
                     console.log('event', e);
                     const todoid = e.target.dataset["id"];
+                    // debugger;
                     fetch('/todos/' + todoid, {
                         method: 'DELETE'
                     })
