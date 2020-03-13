@@ -68,7 +68,7 @@ def create_todo():
         # print(request.get_json())
         description = request.get_json()['description']
         todo = Todo(description=description)
-        todo.list_id = 1
+        todo.list_id = 1         # Put the currently selected lists id here with Pratiksha's help
         db.session.add(todo)
         db.session.commit()
         body['description'] = todo.description
