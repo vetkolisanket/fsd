@@ -38,7 +38,9 @@
             <ul id="lists">
                 {% for list in lists %}
                 <li>
-                    <input class="check-completed" data-id="{{ list.id }}" type="checkbox" />
+                    <input class="list-check-completed" data-id="{{ list.id }}" type="checkbox" 
+                        {%if list.completed %} checked {% endif %}
+                    />
                     <a href="/list/{{ list.id }}">{{ list.name }}</a>
                     <button class="delete-list" data-id="{{ list.id }}">&cross;</button>
                 </li>
@@ -55,7 +57,7 @@
             <ul id="todos">
                 {% for todo in todos %}
                 <li>
-                    <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" 
+                    <input class="todo-check-completed" data-id="{{ todo.id }}" type="checkbox" 
                         {%if todo.completed %} checked {% endif %} />
                         {{ todo.description }}
                     <button class="delete-todo" data-id="{{ todo.id }}">&cross;</button>
@@ -82,11 +84,35 @@
                     })
                 }
             }
-            const checkboxes = document.querySelectorAll('.check-completed');
-            for (i = 0; i < checkboxes.length; i++) {
-                const checkbox = checkboxes[i];
+            const listCheckboxes = document.querySelectorAll('.list-check-completed');
+            for (i = 0; i < listCheckboxes.length; i++) {
+                const checkbox = listCheckboxes[i];
                 checkbox.onchange = function(e) {
                     console.log('event', e);
+                    const newCompleted = e.target.checked;
+                    const listid = e.target.dataset["id"];
+                    fetch('/lists/' + listid + '/set-completed', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            'completed': newCompleted
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(function() {
+                        document.getElementById('error').className = 'hidden';
+                    })
+                    .catch(function() {
+                        document.getElementById('error').className = '';
+                    })
+                }
+            }
+            const todotodoCheckboxes = document.querySelectorAll('.todo-check-completed');
+            for (i = 0; i < todoCheckboxes.length; i++) {
+                const checkbox = todoCheckboxes[i];
+                checkbox.onchange = function(e) {
+                    // console.log('event', e);
                     const newCompleted = e.target.checked;
                     const todoid = e.target.dataset["id"];
                     fetch('/todos/' + todoid + '/set-completed', {
