@@ -66,11 +66,28 @@
             </ul>
         </div>
         <script>
+            const crosslists = document.querySelectorAll('.delete-list');
+            for (i = 0; i < crosslists.length; i++) {
+                const crosslist = crosslists[i];
+                crosslist.onclick = function(e) {
+                    console.log('event', e);
+                    const listid = e.target.dataset["id"];
+                    fetch('/lists/' + listid, {
+                        method: 'DELETE'
+                    })
+                    .then(function() {
+                        document.getElementById('error').className = 'hidden';
+                    })
+                    .catch(function() {
+                        document.getElementById('error').className = '';
+                    })
+                }
+            }
             const crossbuttons = document.querySelectorAll('.delete-todo');
             for (i = 0; i < crossbuttons.length; i++) {
                 const crossbutton = crossbuttons[i];
                 crossbutton.onclick = function(e) {
-                    console.log('event', e);
+                    // console.log('event', e);
                     const todoid = e.target.dataset["id"];
                     // debugger;
                     fetch('/todos/' + todoid, {
@@ -108,7 +125,7 @@
                     })
                 }
             }
-            const todotodoCheckboxes = document.querySelectorAll('.todo-check-completed');
+            const todoCheckboxes = document.querySelectorAll('.todo-check-completed');
             for (i = 0; i < todoCheckboxes.length; i++) {
                 const checkbox = todoCheckboxes[i];
                 checkbox.onchange = function(e) {

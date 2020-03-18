@@ -66,10 +66,11 @@ def create_todo():
     error = False
     body = {}
     try:
-        # print(request.get_json())
+        print(request.get_json())
         description = request.get_json()['description']
+        print(description)
         todo = Todo(description=description)
-        todo.list_id = 1         # Put the currently selected lists id here with Pratiksha's help
+        todo.list_id = 1         
         db.session.add(todo)
         db.session.commit()
         body['description'] = todo.description
@@ -112,6 +113,17 @@ def set_completed_todo(todo_id):
     finally:
         db.session.close()
     return redirect(url_for('index'))
+
+@app.route("/lists/<list_id>", methods=['DELETE'])
+def delete_list(list_id):
+    try:
+        TodoList.query.filter_by(id=list_id).delete()
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return jsonify({'success': True})
 
 @app.route("/todos/<todo_id>", methods=['DELETE'])
 def delete_todo(todo_id):
