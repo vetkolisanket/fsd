@@ -117,6 +117,7 @@ def set_completed_todo(todo_id):
 @app.route("/lists/<list_id>", methods=['DELETE'])
 def delete_list(list_id):
     try:
+        Todo.query.filter_by(list_id=list_id).delete()
         TodoList.query.filter_by(id=list_id).delete()
         db.session.commit()
     except:
